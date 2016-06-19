@@ -6,16 +6,17 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 const expected = `{"repositories":["golang:1.5.4", "golang:1.6.1", "golang:1.6.2"]}`
 
 func TestCatalog(t *testing.T) {
-	s := httptest.NewServer(http.HandlerFunc(mockCatalog))
-	defer s.Close()
+	server := httptest.NewServer(http.HandlerFunc(mockCatalog))
+	defer server.Close()
 
-	r := &Registry{Host: s.URL}
-	res, err := r.Catalog()
+	fixture := NewRegistry(server.URL, time.Second*1)
+	res, err := fixture.Catalog()
 	if err != nil {
 		t.Fatal(err)
 	}

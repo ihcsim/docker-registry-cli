@@ -1,17 +1,11 @@
 package registry
 
-import (
-	"io"
-	"net/http"
-)
+import "io"
 
 // Catalog lists all the repositories in the registry.
 func (r *Registry) Catalog() (io.ReadCloser, error) {
-	url := r.Host + "/v2/_catalog"
-	client := &http.Client{
-		Timeout: timeout,
-	}
-	resp, err := client.Get(url)
+	url := r.host + "/v2/_catalog"
+	resp, err := r.client.Get(url)
 	if err != nil {
 		return nil, err
 	}

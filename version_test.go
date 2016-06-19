@@ -2,17 +2,19 @@ package registry
 
 import (
 	"fmt"
-	log "github.com/Sirupsen/logrus"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 func TestAPIVersion(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(mockAPI))
 	defer server.Close()
 
-	fixture := &Registry{Host: server.URL}
+	fixture := NewRegistry(server.URL, time.Second*1)
 	expected := "registry/2.0"
 	actual, err := fixture.APIVersion()
 	if err != nil {
